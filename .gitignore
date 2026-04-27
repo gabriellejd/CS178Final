@@ -1,0 +1,19 @@
+# Ignore the massive MBTA data files (anywhere in the project)
+**/*.db
+**/*.csv
+**/*.xlsx
+**/*.parquet
+
+# Ignore the GTFS text files (like stop_times.txt)
+**/*.txt
+
+# Ignore your Python Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Ignore system and cache files
+**/__pycache__/
+**/.DS_Store
+**/.env
+**/.ipynb_checkpoints/
