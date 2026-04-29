@@ -17,3 +17,5 @@ ENV/
 **/.DS_Store
 **/.env
 **/.ipynb_checkpoints/
+
+.vscode/settings.json
