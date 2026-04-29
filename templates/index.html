@@ -3,15 +3,156 @@
 <head>
     <title>MBTA Reliability Dashboard</title>
     <style>
-        body { background-color: #1a1a1a; color: white; font-family: sans-serif; }
-        .map-container { width: 80%; margin: auto; height: 600px; border: 2px solid #444; }
+        body {
+            margin: 0;
+            background-color: #1a1a1a;
+            color: white;
+            font-family: sans-serif;
+        }
+
+        h1 {
+            margin: 20px;
+        }
+
+        .dashboard {
+            display: flex;
+            gap: 20px;
+            padding: 0 20px 20px 20px;
+        }
+
+        .sidebar {
+            width: 260px;
+            background-color: #242424;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #444;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select,
+        input,
+        button {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            margin-bottom: 8px;
+        }
+
+        button {
+            background-color: #00ff7f;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .reset-link {
+            display: block;
+            text-align: center;
+            color: #ff4b4b;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .map-container {
+            width: 100%;
+            height: 650px;
+            border: 2px solid #444;
+            border-radius: 12px;
+            overflow: hidden;
+        }
     </style>
 </head>
+
 <body>
     <h1>MBTA Data Analysis</h1>
-    <div class="map-container">
-        {{ map_html | safe }}
+
+    <div class="dashboard">
+
+        <aside class="sidebar">
+            <h2>Filters</h2>
+
+            <form method="GET">
+
+                <label>Line</label>
+                <select name="line">
+                    <option value="">All</option>
+                    <option value="Green" {{ 'selected' if line == 'Green' else '' }}>Green</option>
+                    <option value="Red" {{ 'selected' if line == 'Red' else '' }}>Red</option>
+                    <option value="Orange" {{ 'selected' if line == 'Orange' else '' }}>Orange</option>
+                    <option value="Blue" {{ 'selected' if line == 'Blue' else '' }}>Blue</option>
+                    <option value="Mattapan" {{ 'selected' if line == 'Mattapan' else '' }}>Mattapan</option>
+                </select>
+
+                <label>Day of Week</label>
+                <select name="day">
+                    <option value="">All</option>
+                    <option value="Monday" {{ 'selected' if day == 'Monday' else '' }}>Monday</option>
+                    <option value="Tuesday" {{ 'selected' if day == 'Tuesday' else '' }}>Tuesday</option>
+                    <option value="Wednesday" {{ 'selected' if day == 'Wednesday' else '' }}>Wednesday</option>
+                    <option value="Thursday" {{ 'selected' if day == 'Thursday' else '' }}>Thursday</option>
+                    <option value="Friday" {{ 'selected' if day == 'Friday' else '' }}>Friday</option>
+                    <option value="Saturday" {{ 'selected' if day == 'Saturday' else '' }}>Saturday</option>
+                    <option value="Sunday" {{ 'selected' if day == 'Sunday' else '' }}>Sunday</option>
+                </select>
+
+                <label>Time of Day</label>
+                <select name="time_of_day">
+                    <option value="">All</option>
+                    <option value="morning" {{ 'selected' if time_of_day == 'morning' else '' }}>Morning</option>
+                    <option value="midday" {{ 'selected' if time_of_day == 'midday' else '' }}>Midday</option>
+                    <option value="evening" {{ 'selected' if time_of_day == 'evening' else '' }}>Evening</option>
+                    <option value="night" {{ 'selected' if time_of_day == 'night' else '' }}>Night</option>
+                </select>
+
+                <label>Month</label>
+                <select name="month">
+                    <option value="">All</option>
+                    <option value="1" {{ 'selected' if month == '1' else '' }}>January</option>
+                    <option value="2" {{ 'selected' if month == '2' else '' }}>February</option>
+                    <option value="3" {{ 'selected' if month == '3' else '' }}>March</option>
+                    <option value="4" {{ 'selected' if month == '4' else '' }}>April</option>
+                    <option value="5" {{ 'selected' if month == '5' else '' }}>May</option>
+                    <option value="6" {{ 'selected' if month == '6' else '' }}>June</option>
+                    <option value="7" {{ 'selected' if month == '7' else '' }}>July</option>
+                    <option value="8" {{ 'selected' if month == '8' else '' }}>August</option>
+                    <option value="9" {{ 'selected' if month == '9' else '' }}>September</option>
+                    <option value="10" {{ 'selected' if month == '10' else '' }}>October</option>
+                    <option value="11" {{ 'selected' if month == '11' else '' }}>November</option>
+                    <option value="12" {{ 'selected' if month == '12' else '' }}>December</option>
+                </select>
+
+
+                <button type="submit">Apply Filters</button>
+                <a class="reset-link" href="/">Reset Filters</a>
+
+            </form>
+        </aside>
+
+        <main class="main-content">
+            <div class="map-container">
+                {{ map_html | safe }}
+            </div>
+        </main>
+
     </div>
 </body>
 </html>
+
 
