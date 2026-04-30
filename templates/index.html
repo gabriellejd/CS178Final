@@ -3,16 +3,26 @@
 <head>
     <title>MBTA Data Analysis</title>
 
-    <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-    <!-- D3 -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
-    <!-- style-->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
+    <style>
+        /* Pulse Animation for Medford/Tufts */
+        .medford-pulse {
+            animation: pulse-animation 2s infinite;
+            stroke: #fff;
+            stroke-width: 3px;
+        }
+        @keyframes pulse-animation {
+            0% { stroke-width: 2; stroke-opacity: 1; }
+            50% { stroke-width: 10; stroke-opacity: 0.4; }
+            100% { stroke-width: 2; stroke-opacity: 1; }
+        }
+    </style>
 </head>
 
 <body>
@@ -26,9 +36,10 @@
 
         <form id="filter-form">
 
-            <label>Line</label>
+            <label>Line / Branch Focus</label>
             <select name="line">
                 <option value="">All</option>
+                <option value="Medford/Tufts">Medford/Tufts (GLX)</option>
                 <option value="Green">Green</option>
                 <option value="Red">Red</option>
                 <option value="Orange">Orange</option>
@@ -86,6 +97,10 @@
             <h3>Legend</h3>
 
             <div class="legend-item">
+                <span class="dot" style="background: #ffff00;"></span> Medford/Tufts (Focus)
+            </div>
+
+            <div class="legend-item">
                 <span class="dot green"></span> Low Avg Headway
             </div>
 
@@ -95,7 +110,7 @@
 
             <p class="legend-text">
                 Circle Size → Variability<br>
-                (Smaller = consistent, Larger = unreliable)
+                Faded Circle → Sparse Data (Desert)
             </p>
         </div>
     </main>
@@ -104,4 +119,3 @@
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
-
