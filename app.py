@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 import duckdb
 import os
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -85,9 +88,41 @@ def data():
         GROUP BY stop_name
     """
 
-    # Execute and convert to dictionary
-    df = con.execute(query, params).df().fillna(0)
+    # # Execute and convert to dictionary
+    # df = con.execute(query, params).df().fillna(0)
     
+    # return jsonify(df.to_dict(orient="records"))
+    df = con.execute(query, params).df().fillna(0)
+
+# ---------- K-MEANS CLUSTERING ----------
+    if len(df) >= 3:
+        features = df[["avg_wait", "std_dev"]]
+
+        scaler = StandardScaler()
+        X_scaled = scaler.fit_transform(features)
+
+        kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
+        df["cluster"] = kmeans.fit_predict(X_scaled)
+
+        # Interpret clusters based on average wait + variability
+        cluster_summary = (
+            df.groupby("cluster")[["avg_wait", "std_dev"]]
+            .mean()
+            .sum(axis=1)
+            .sort_values()
+        )
+
+        label_map = {}
+        labels = ["Reliable Service", "Moderate Issues", "Unreliable Service"]
+
+        for cluster_id, label in zip(cluster_summary.index, labels):
+            label_map[cluster_id] = label
+
+        df["cluster_label"] = df["cluster"].map(label_map)
+    else:
+        df["cluster"] = 0
+        df["cluster_label"] = "Not enough data"
+
     return jsonify(df.to_dict(orient="records"))
 
 if __name__ == '__main__':

@@ -21,9 +21,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 const std = +d.std_dev;
                 const count = +d.record_count;
 
-                // Medford is Yellow, others are Green (good) or Red (bad)
-                let color = avg > 600 ? "#ff4b4b" : "#00ff7f";
-                if (isMedford) color = "#ffff00";
+                // // Medford is Yellow, others are Green (good) or Red (bad)
+                // let color = avg > 600 ? "#ff4b4b" : "#00ff7f";
+                // if (isMedford) color = "#ffff00";
+                let color = "#888888";
+
+                if (d.cluster_label === "Reliable Service") {
+                    color = "#00ff7f";
+                } else if (d.cluster_label === "Moderate Issues") {
+                    color = "#ffaa00";
+                } else if (d.cluster_label === "Unreliable Service") {
+                    color = "#ff4b4b";
+                }
+
+                //if (isMedford) color = "#ffff00";
 
                 // Faded opacity for sparse data (The "Desert" effect)
                 const opacity = count < 15 ? 0.3 : 0.8;
@@ -37,12 +48,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     weight: isMedford ? 3 : 1,
                     className: isMedford ? 'medford-pulse' : ''
                 })
+                // .bindPopup(`
+                //     <div style="text-align:center;">
+                //         <b>${d.stop_name}</b><br>
+                //         Records: ${count}<br>
+                //         Avg Wait: ${(avg/60).toFixed(1)} min<br>
+                //         Variability: ${(std/60).toFixed(1)} min
+                //     </div>
+                // `)
                 .bindPopup(`
                     <div style="text-align:center;">
                         <b>${d.stop_name}</b><br>
                         Records: ${count}<br>
                         Avg Wait: ${(avg/60).toFixed(1)} min<br>
-                        Variability: ${(std/60).toFixed(1)} min
+                        Variability: ${(std/60).toFixed(1)} min<br>
+                        <b>Cluster:</b> ${d.cluster_label}
                     </div>
                 `)
                 .addTo(stationLayer);
