@@ -1,22 +1,23 @@
 from flask import Flask, render_template, request, jsonify
 import duckdb
-import folium
 import os
 
 app = Flask(__name__)
 
-# Render page
+# Render the main page
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
-# Data endpoint for D3
+# Data endpoint for the D3 map
 @app.route('/data')
 def data():
+    # Connect to the database
     con = duckdb.connect('mbta_data.db')
 
+    # Get filters from the frontend
     line = request.args.get('line')
+    stop = request.args.get('stop')
     day = request.args.get('day')
     time_of_day = request.args.get('time_of_day')
     month = request.args.get('month')
@@ -24,11 +25,35 @@ def data():
     where_clauses = []
     params = []
 
-    if day:
+    # Filter Logic
+    if stop and stop != "":
+        where_clauses.append("stop_name = ?")
+        params.append(stop)
+    elif line:
+        if line:
+            if line == "Medford/Tufts":
+                # The complete Green Line E path from Medford to Heath Street
+                e_branch_stops = (
+                    'Medford/Tufts', 'Ball Square', 'Magoun Square', 
+                    'Gilman Square', 'East Somerville', 'Lechmere', 
+                    'Science Park/West End', 'North Station', 'Haymarket', 
+                    'Government Center', 'Park Street', 'Boylston', 
+                    'Arlington', 'Copley', 'Prudential', 'Symphony', 
+                    'Northeastern University', 'Museum of Fine Arts', 
+                    'Longwood Medical Area', 'Brigham Circle', 'Fenwood Road', 
+                    'Mission Park', 'Riverway', 'Back of the Hill', 'Heath Street'
+                )
+                where_clauses.append("stop_name IN " + str(e_branch_stops))
+            elif line == "Green":
+                where_clauses.append("route_id LIKE 'Green%'")
+            else:
+                where_clauses.append("route_id = ?")
+                params.append(line)
+    if day and day != "":
         where_clauses.append("dayname(service_date) = ?")
         params.append(day)
 
-    if month:
+    if month and month != "":
         where_clauses.append("month(service_date) = ?")
         params.append(int(month))
 
@@ -41,22 +66,18 @@ def data():
     elif time_of_day == "night":
         where_clauses.append("(stop_departure_sec >= 68400 OR stop_departure_sec < 21600)")
 
-    if line:
-        if line == "Green":
-            where_clauses.append("route_id LIKE 'Green%'")
-        else:
-            where_clauses.append("route_id = ?")
-            params.append(line)
-
+    # Construct the WHERE SQL
     where_sql = ""
     if where_clauses:
         where_sql = "WHERE " + " AND ".join(where_clauses)
 
+    # The Query
     query = f"""
         SELECT 
             stop_name,
             AVG(stop_lat) AS lat,
             AVG(stop_lon) AS lon,
+            COUNT(*) AS record_count,
             AVG(headway_branch_seconds) AS avg_wait,
             STDDEV(headway_branch_seconds) AS std_dev
         FROM mbta_master_geo
@@ -64,12 +85,11 @@ def data():
         GROUP BY stop_name
     """
 
+    # Execute and convert to dictionary
     df = con.execute(query, params).df().fillna(0)
-
+    
     return jsonify(df.to_dict(orient="records"))
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
-
-
+    # Using use_reloader=False can sometimes help on Macs if it crashes
+    app.run(debug=True, port=5000)
