@@ -1,4 +1,4 @@
-body {
+/* body {
     margin: 0;
     background-color: #1a1a1a;
     color: white;
@@ -103,4 +103,122 @@ button {
     font-size: 12px;
     color: #ccc;
     margin-top: 10px;
+} */
+ body {
+    margin: 0;
+    background-color: #1a1a1a;
+    color: white;
+    font-family: sans-serif;
+}
+
+h1 {
+    margin: 20px;
+}
+
+.dashboard {
+    display: flex;
+    gap: 20px;
+    padding: 0 20px 20px 20px;
+}
+
+.sidebar {
+    width: 180px;
+    background-color: #242424;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #444;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+select, button {
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    margin-top: 5px;
+}
+
+button {
+    background-color: #00ff7f;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.reset-link {
+    display: block;
+    text-align: center;
+    color: #ff4b4b;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.legend {
+    position: absolute;
+    bottom: 15px;
+    right: 10px;
+    background: rgba(31, 31, 31, 0.9);
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #444;
+    width: 160px;
+    z-index: 10000;
+}
+.legend h3 {
+    margin-top: 0;
+}
+
+.legend-item {
+    margin: 8px 0;
+}
+
+.dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.green {
+    background: #00ff7f;
+}
+
+.red {
+    background: #ff4b4b;
+}
+
+.legend-text {
+    font-size: 12px;
+    color: #ccc;
+    margin-top: 10px;
+}
+
+.main-content {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: stretch;
+}
+
+#map {
+    flex: 2;
+    height: 600px;
+    border-radius: 12px;
+    min-width: 0;
+}
+
+#scatter {
+    flex: 1.7;
+    height: 600px;
+    background: #111;
+    border-radius: 6px;
+    min-width: 0;
 }

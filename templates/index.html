@@ -1,41 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>MBTA Data Analysis</title>
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
-    <style>
-        /* Pulse Animation for Medford/Tufts */
-        .medford-pulse {
-            animation: pulse-animation 2s infinite;
-            stroke: #fff;
-            stroke-width: 3px;
-        }
-        @keyframes pulse-animation {
-            0% { stroke-width: 2; stroke-opacity: 1; }
-            50% { stroke-width: 10; stroke-opacity: 0.4; }
-            100% { stroke-width: 2; stroke-opacity: 1; }
-        }
-    </style>
+<title>MBTA Data Analysis</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+.medford-pulse {
+    animation: pulse-animation 2s infinite;
+    stroke: #fff;
+    stroke-width: 3px;
+}
+@keyframes pulse-animation {
+    0% { stroke-width: 2; stroke-opacity: 1; }
+    50% { stroke-width: 10; stroke-opacity: 0.4; }
+    100% { stroke-width: 2; stroke-opacity: 1; }
+}
+</style>
 </head>
-
 <body>
-
 <h1>MBTA Data Analysis</h1>
-
 <div class="dashboard">
-
     <aside class="sidebar">
         <h2>Filters</h2>
-
         <form id="filter-form">
-
             <label>Line / Branch Focus</label>
             <select name="line">
                 <option value="">All</option>
@@ -46,7 +35,6 @@
                 <option value="Blue">Blue</option>
                 <option value="Mattapan">Mattapan</option>
             </select>
-
             <label>Day</label>
             <select name="day">
                 <option value="">All</option>
@@ -58,7 +46,6 @@
                 <option>Saturday</option>
                 <option>Sunday</option>
             </select>
-
             <label>Time of Day</label>
             <select name="time_of_day">
                 <option value="">All</option>
@@ -67,7 +54,6 @@
                 <option value="evening">Evening</option>
                 <option value="night">Night</option>
             </select>
-
             <label>Month</label>
             <select name="month">
                 <option value="">All</option>
@@ -84,49 +70,32 @@
                 <option value="11">Nov</option>
                 <option value="12">Dec</option>
             </select>
-
             <button type="submit">Apply Filters</button>
             <div class="reset-link" id="reset">Reset Filters</div>
-
         </form>
     </aside>
 
     <main class="main-content">
-        <div id="map"></div>
-        <div class="legend">
-            <h3>Legend</h3>
-
-            <div class="legend-item">
-                <span class="dot" style="background: #ffff00;"></span> Medford/Tufts (Focus)
+        <div style="flex: 2; position: relative; min-width: 0;">
+            <div id="map"></div>
+            <div class="legend">
+                <h3>Legend</h3>
+                <div class="legend-item">
+                    <span class="dot" style="background: #00ff7f;"></span> Reliable Service
+                </div>
+                <div class="legend-item">
+                    <span class="dot" style="background: #ff4b4b;"></span> Unreliable Service
+                </div>
+                <p class="legend-text">
+                    Circle Size → Variability<br>
+                    Faded Circle → Sparse Data (Desert)
+                </p>
             </div>
-
-            <!-- <div class="legend-item">
-                <span class="dot green"></span> Low Avg Headway
-            </div>
-
-            <div class="legend-item">
-                <span class="dot red"></span> High Avg Headway
-            </div> -->
-            <div class="legend-item">
-                <span class="dot" style="background: #00ff7f;"></span> Reliable Service
-            </div>
-
-            <div class="legend-item">
-                <span class="dot" style="background: #ffaa00;"></span> Moderate Issues
-            </div>
-
-            <div class="legend-item">
-                <span class="dot" style="background: #ff4b4b;"></span> Unreliable Service
-            </div>
-
-            <p class="legend-text">
-                Circle Size → Variability<br>
-                Faded Circle → Sparse Data (Desert)
-            </p>
         </div>
+        <div id="scatter"></div>
     </main>
-
 </div>
+
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
