@@ -107,16 +107,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 const count = +d.record_count;
                 const color = avg > 600 ? "#ff4b4b" : "#00ff7f";
                 const opacity = count < 15 ? 0.3 : 0.8;
-                const radius = isMedford ? 15 : (std / 1000 + 4);
+                //const radius = isMedford ? 15 : (std / 1000 + 4);
+                const radius = 4 + (std / 60) * 0.3;
 
                 L.circleMarker([+d.lat, +d.lon], {
                     radius,
                     color: isMedford ? "#ffffff" : color,
                     fillColor: color,
                     fillOpacity: isMedford ? 1.0 : opacity,
-                    weight: isMedford ? 3 : 1,
-                    stopName: d.stop_name,          // <-- needed for highlight()
-                    className: isMedford ? 'medford-pulse' : ''
+                    weight: isMedford ? 3 : 1
+                    //stopName: d.stop_name,          // <-- needed for highlight()
+                    //className: isMedford ? 'medford-pulse' : ''
                 })
                 .bindPopup(`
                     <div style="text-align:center;">
