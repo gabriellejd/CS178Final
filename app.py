@@ -238,7 +238,7 @@ def data():
     if len(df) >= 3:
         cluster_df = df.dropna(subset=available_cols).copy()
         
-        # Cap each feature at 99th percentile before scaling
+        # Cap each feature at 92th percentile before scaling
         for col in available_cols:
             cap = cluster_df[col].quantile(0.92)
             cluster_df[col] = cluster_df[col].clip(upper=cap)

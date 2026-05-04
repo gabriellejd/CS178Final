@@ -115,8 +115,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     color: isMedford ? "#ffffff" : color,
                     fillColor: color,
                     fillOpacity: isMedford ? 1.0 : opacity,
-                    weight: isMedford ? 3 : 1
-                    //stopName: d.stop_name,          // <-- needed for highlight()
+                    weight: isMedford ? 3 : 1,
+                    stopName: d.stop_name          // <-- needed for highlight()
                     //className: isMedford ? 'medford-pulse' : ''
                 })
                 .bindPopup(`
